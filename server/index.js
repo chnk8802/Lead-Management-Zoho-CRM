@@ -3,6 +3,8 @@ import "dotenv/config";
 import express from "express"
 import path from "path"
 import { fileURLToPath } from "url";
+import axios from "axios";
+import catalyst from "zcatalyst-sdk-node"
 
 import {getUser} from "./service/userService.js"
 
