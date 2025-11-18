@@ -1,0 +1,30 @@
+{
+  "defaults": {
+    "project": 1,
+    "env": 1
+  },
+  "actives": {
+    "project": 1,
+    "env": 1
+  },
+  "projects": [
+    {
+      "idx": 1,
+      "id": "25412000000015121",
+      "name": "EmAuth",
+      "domain": {
+        "id": "50035976010",
+        "name": "emauth-60058039403.development"
+      },
+      "timezone": "Asia/Kolkata",
+      "env": [
+        {
+          "idx": 1,
+          "id": "60058039403",
+          "name": "Development",
+          "type": 3
+        }
+      ]
+    }
+  ]
+}
