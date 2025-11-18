@@ -1,0 +1,31 @@
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #c0c0c0;
+  height: inherit;
+}
+
+.inputs {
+  width: 90%;
+  padding: 15px;
+  margin: 15px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+  border-radius: 8px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 1;
+}
+
+#login {
+  height: 29rem;
+}
