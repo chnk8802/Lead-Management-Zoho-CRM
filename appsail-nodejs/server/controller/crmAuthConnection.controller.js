@@ -1,6 +1,7 @@
 import { URLSearchParams } from "url";
-import { oauthAxios } from "../utils/oauthAxios.js";
-import { datastoreTable, getCurrentUser } from "../service/catalyst.service.js";
+import { oauthAxios } from "../utils/oauthAxios.utils.js";
+import { datastoreTable, getCurrentUser, getRowsByQuery } from "../service/catalyst.service.js";
+import { toLocalSQLString } from "../utils/helpers.utils.js";
 
 export const oauthConnection = async (req, res) => {
   const { code } = req.query;
@@ -12,11 +13,7 @@ export const oauthConnection = async (req, res) => {
   let client_id = process.env.CLIENT_ID;
   let client_secret = process.env.CLIENT_SECRET;
   let redirect_uri = `${process.env.REDIRECT_URI}/oauthredirect`;
-  console.log("OAuth Redirect URI:", redirect_uri);
-  console.log("Received code:", code);
-  console.log("Using Client ID:", client_id);
-  console.log("Using Client Secret:", client_secret ? "****" : "MISSING");
-  // Build params for Zoho token endpoint
+
   const params = new URLSearchParams({
     client_id: client_id,
     client_secret: client_secret,
@@ -26,19 +23,27 @@ export const oauthConnection = async (req, res) => {
   });
 
   try {
-    // 1 Exchange code for OAuth tokens (using axios instance)
     const tokenResp = await oauthAxios.post("/token", params.toString());
 
-    // 2 Catalyst - get user and datastore
     const user = await getCurrentUser(req);
     if (!user) {
       console.warn("User not logged in.");
       return res.status(400).send("User not logged in.");
     }
 
+    // check if tokens already exist for this user and delete them
+    const existingRows = await getRowsByQuery(req, `SELECT ROWID FROM tokens WHERE auth_user_id = '${user.user_id}'`);
+    if (existingRows.length > 0) {
+      for (const row of existingRows) {
+        await datastoreTable(req, "tokens").deleteRow(row.ROWID);
+      }
+    }
+
     const tokensTable = datastoreTable(req, "tokens");
-    console.log("tokenResp", tokenResp.data);
-    // 3 Prepare row data to store
+
+    let expiry_time = new Date(Date.now() + tokenResp.data.expires_in * 1000);
+    const formatted = toLocalSQLString(expiry_time);
+
     const rowData = {
       auth_user_id: user.user_id,
       scope: tokenResp.data.scope,
@@ -47,26 +52,19 @@ export const oauthConnection = async (req, res) => {
       access_token: tokenResp.data.access_token,
       refresh_token: tokenResp.data.refresh_token,
       expires_in: tokenResp.data.expires_in,
-      expiry_time: Date.now() + tokenResp.data.expires_in * 1000,
+      expiry_time: formatted,
     };
 
-    // 4 Insert token row
     const inserted = await tokensTable.insertRow(rowData);
 
-    res.json({
-      message: "Tokens saved successfully",
-      tokens: rowData,
-      datastore_response: inserted,
-    });
+    // res.json({
+    //   message: "Tokens saved successfully",
+    //   tokens: rowData,
+    //   datastore_response: inserted,
+    // });
+    return res.redirect(`${process.env.REDIRECT_URI}/oauth-success`);
   } catch (error) {
-    console.error(
-      "Error in /oauthredirect:",
-      error?.response?.data || error.message || error
-    );
-    ``;
-    let msg = "Token exchange failed";
-    if (error?.response?.data?.error) msg += ": " + error;
-
-    return res.status(500).send(msg);
+    console.error("Error in /oauthredirect:", error);
+    return res.status(500).send("Token exchange failed");
   }
 };

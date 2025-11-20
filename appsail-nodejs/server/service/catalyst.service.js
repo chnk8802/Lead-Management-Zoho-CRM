@@ -68,10 +68,14 @@ export const getRowsByQuery = async (req, query) => {
   }
 };
 
-export const getUserToken = async (req, userId) => {
+export const getUserToken = async (req) => {
   const zcql = app(req).zcql();
+  const user = await getCurrentUser(req);
+  if (!user) {
+    throw new Error("No authenticated user");
+  }
+  const userId = user.user_id;
   const query = `SELECT * FROM tokens WHERE auth_user_id = '${userId}'`;
   const rows = await zcql.executeZCQLQuery(query);
-
   return rows.length ? rows[0].tokens : null;
 };

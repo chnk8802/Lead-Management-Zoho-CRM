@@ -13,7 +13,6 @@ export const getAuthUser = async (req, res) => {
     if (!rows || rows.length === 0) {
       return res.status(404).json({ error: "No tokens found for user" });
     }
-    console.log(rows);
     const tokenRow = rows[0].tokens || {};
     res.json({
       user: {
