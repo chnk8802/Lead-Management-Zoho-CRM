@@ -1,7 +1,7 @@
 import "./Signup.css";
-import React, { useState } from "react";
+import { useState } from "react";
 
-function Signup() {
+export const Signup = () => {
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [form, setForm] = useState({
         firstName: "",
@@ -129,5 +129,3 @@ function Signup() {
         </div>
     );
 }
-
-export default Signup;

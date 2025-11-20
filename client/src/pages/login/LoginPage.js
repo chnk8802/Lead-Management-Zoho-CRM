@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./LoginPage.css";
 
-const LoginPage = () => {
+export const LoginPage = () => {
   useEffect(() => {
     //config is optional
     window.catalyst.auth.signIn("login");
@@ -31,4 +31,3 @@ const LoginPage = () => {
     </div>
   );
 };
-export default LoginPage;

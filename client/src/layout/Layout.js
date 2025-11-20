@@ -1,8 +1,8 @@
-import LoginPage from "../pages/login/LoginPage.js"
-import UserProfile from "../pages/userProfile/UserProfile.js"
+import {LoginPage} from "../pages/login/LoginPage.js"
+import {Dashboard} from "../pages/dashboard/Dashboard.js";
 import { useEffect, useState, useRef } from "react";
 
-function Layout() {
+export const Layout = () => {
   const [isFetching, setIsFetching] = useState(true);
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
   const [userDetails, setUserDetails] = useState({
@@ -37,11 +37,10 @@ function Layout() {
       {isFetching ? (
         <p>Loading …</p>
       ) : isUserAuthenticated ? (
-        <UserProfile userDetails={userDetails} />
+        <Dashboard userDetails={userDetails} />
       ) : (
         <LoginPage />
       )}
     </>
   );
 }
-export default Layout;

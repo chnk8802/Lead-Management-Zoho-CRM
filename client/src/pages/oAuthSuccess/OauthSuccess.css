@@ -1,0 +1,54 @@
+.oauth-success-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f8fafc;
+}
+
+.oauth-success-card {
+  text-align: center;
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+}
+
+.success-icon {
+  font-size: 64px;
+  color: #22c55e;
+}
+
+.success-title {
+  margin-top: 20px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.success-subtitle {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #555;
+}
+
+.success-countdown {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.success-button {
+  margin-top: 25px;
+  background: #22c55e;
+  border: none;
+  padding: 10px 20px;
+  color: white;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.success-button:hover {
+  background: #16a34a;
+}
