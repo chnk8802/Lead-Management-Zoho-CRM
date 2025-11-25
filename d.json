@@ -1,0 +1,21 @@
+[
+  {
+    "data_type": "ownerlookup",
+    "data_type": "text",
+    "data_type": "email",
+    "data_type": "phone",
+    "data_type": "website",
+    "data_type": "picklist",
+    "data_type": "datetime",
+    "data_type": "textarea"
+  },
+  {
+    "data_type": "integer",
+    "data_type": "currency",
+    "data_type": "boolean",
+    "data_type": "double",
+    "data_type": "profileimage",
+    "data_type": "bigint",
+    "data_type": "lookup"
+  }
+]
