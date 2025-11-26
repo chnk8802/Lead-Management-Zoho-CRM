@@ -15,7 +15,7 @@ export const Dashboard = ({ userDetails }) => {
     };
     fetchUser();
   }, []);
-  
+
   const scopes = "ZohoCRM.modules.all,ZohoCRM.settings.ALL,ZohoCRM.coql.READ";
   const handleZohoConnect = () => {
     const clientId = process.env.REACT_APP_CLIENT_ID;
@@ -31,9 +31,10 @@ export const Dashboard = ({ userDetails }) => {
       <header className="dashboard-header">
         {" "}
         <h2>Dashboard</h2>{" "}
+        <menu className="menu-links">
+          <Link to="/lead-mapping">Lead Mapping</Link>
+        </menu>
         <div className="user-icon-wrapper">
-          <Link to="/leads">Leads Page</Link>
-          {" "}
           <img
             id="userIcon"
             src="https://cdn2.iconfinder.com/data/icons/user-management/512/profile_settings-512.png"
@@ -86,4 +87,4 @@ export const Dashboard = ({ userDetails }) => {
       </main>
     </div>
   );
-}
+};

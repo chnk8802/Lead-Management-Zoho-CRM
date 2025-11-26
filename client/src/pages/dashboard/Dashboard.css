@@ -65,3 +65,19 @@
   color: green;
   font-weight: bold;
 }
+.menu-links {
+  margin-right: 20px;
+  color:#FFFFFF;
+}
+.menu-links {
+  margin-right: 20px;
+}
+
+.menu-links a {
+  color: #FFFFFF;
+  text-decoration: none;
+  margin-left: 15px;
+}
+.menu-links a:hover {
+  text-decoration: underline;
+}

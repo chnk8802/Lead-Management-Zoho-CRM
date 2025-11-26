@@ -1,18 +1,20 @@
-import {crmAxios} from "../utils/crmAxios.utils.js"
-import { getAccessToken } from "../utils/helpers.utils.js";
+import { crmAxios } from "../utils/crmAxios.utils.js";
+import { accessToken } from "../service/zohoAuth.service.js";
 
 export const getLeads = async (req, res) => {
   try {
-    const access_token = await getAccessToken(req);
-
+    const access_token = await accessToken(req);
+    
     const api = crmAxios(access_token);
 
     const response = await api.get("/Leads?fields=Last_Name");
 
     return res.json(response.data);
-
   } catch (error) {
-    console.error("Error fetching leads:", error?.response?.data || error.message);
+    console.error(
+      "Error fetching leads:",
+      error?.response?.data || error.message
+    );
 
     return res.status(500).json({
       error: "Failed to fetch leads from Zoho CRM",
@@ -23,16 +25,20 @@ export const getLeads = async (req, res) => {
 
 export const getLeadFields = async (req, res) => {
   try {
-    const access_token = await getAccessToken(req);
-
+    const access_token = await accessToken(req);
     const api = crmAxios(access_token);
     const response = await api.get("/settings/fields?module=Leads");
     return res.json(response.data);
   } catch (error) {
-    console.error("Error fetching lead fields:", error?.response?.data || error.message);
+    console.error(
+      "Error fetching lead fields:",
+      error?.response?.data || error.message
+    );
     return res.status(500).json({
       error: "Failed to fetch lead fields from Zoho CRM",
       details: error?.response?.data || error.message,
     });
   }
 };
+
+
