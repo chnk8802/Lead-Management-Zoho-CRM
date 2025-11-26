@@ -41,6 +41,7 @@
   position: absolute;
   top: 5px;
   right: 8px;
+  color: black;
   background: transparent;
   border: none;
   font-size: 18px;
@@ -71,6 +72,9 @@
 }
 .menu-links {
   margin-right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem
 }
 
 .menu-links a {

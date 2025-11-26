@@ -2,6 +2,7 @@
 import axios from "axios";
 import {
   datastoreTable,
+  getCurrentUser,
   getRowsByQuery,
 } from "./catalyst.service.js";
 import { getAccessToken, toLocalSQLString } from "../utils/helpers.utils.js";
@@ -15,14 +16,19 @@ const isExpired = (expiryTime) => {
   return expiry <= now;
 };
 
-export const accessToken = async (req) => {
+export const accessToken = async (req, userId = null) => {
   try {
     if (!req) throw new Error("req is required to refresh token");
+    if (!userId) {
+      if (req.authenticatedUser?.user_id) {
+        userId = req.authenticatedUser.user_id;
+      } else {
+        userId = await getCurrentUser(req);
+      }
+    }
 
-    const user = req.authenticatedUser;
     const table = datastoreTable(req, "tokens");
-
-    const query = `SELECT * FROM tokens WHERE auth_user_id = '${user.user_id}'`;
+    const query = `SELECT * FROM tokens WHERE auth_user_id = '${userId}'`;
     const rows = await getRowsByQuery(req, query);
 
     if (!rows || rows.length === 0) {
@@ -31,16 +37,10 @@ export const accessToken = async (req) => {
 
     const { ROWID, access_token, refresh_token, expiry_time } = rows[0].tokens;
 
-    // -------------------------------------------------------------------
-    // 1️⃣ If token is NOT expired → return existing token
-    // -------------------------------------------------------------------
     if (access_token && !isExpired(expiry_time)) {
       return access_token;
     }
 
-    // -------------------------------------------------------------------
-    // 2️⃣ Token EXPIRED → refresh using refresh_token
-    // -------------------------------------------------------------------
     const url = "https://accounts.zoho.in/oauth/v2/token";
 
     const params = new URLSearchParams({
@@ -57,9 +57,6 @@ export const accessToken = async (req) => {
     const newExpiry = new Date(Date.now() + expiresIn * 1000);
     const formattedExpiry = toLocalSQLString(newExpiry);
 
-    // -------------------------------------------------------------------
-    // 3️⃣ Update datastore with new access token + expiry
-    // -------------------------------------------------------------------
     const UpdatePayload = {
       ROWID,
       access_token: newAccessToken,
@@ -67,12 +64,15 @@ export const accessToken = async (req) => {
     };
     await table.updateRow(UpdatePayload);
     const usableAccessToken = await getAccessToken(req);
+    if (!usableAccessToken) {
+      throw new Error("Failed to retrieve updated access token");
+    }
     return usableAccessToken;
   } catch (error) {
     console.error(
       "Error refreshing Zoho access token:",
       error.response?.data || error
     );
-    throw new Error("Failed to refresh Zoho access token");
+    throw new Error("Failed to refresh Zoho access token " + error.message);
   }
 };

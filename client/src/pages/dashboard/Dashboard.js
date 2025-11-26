@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { LogoutButton } from "../../components/LogoutButton.js";
 import "./Dashboard.css";
 import { getAuthUser } from "../../api/authUserApi.js";
+import WebhookUrlGenerator from "../../components/WebhhokURLGeneratorButton/WebhhokURLGeneratorButton.js";
 
 export const Dashboard = ({ userDetails }) => {
   const [userInfo, setUserInfo] = useState(null);
@@ -33,6 +34,7 @@ export const Dashboard = ({ userDetails }) => {
         <h2>Dashboard</h2>{" "}
         <menu className="menu-links">
           <Link to="/lead-mapping">Lead Mapping</Link>
+          <WebhookUrlGenerator />
         </menu>
         <div className="user-icon-wrapper">
           <img
@@ -83,6 +85,7 @@ export const Dashboard = ({ userDetails }) => {
       <main className="dashboard-main">
         <h3>Welcome, {userDetails.firstName}!</h3>
         <p>This is your dashboard overview.</p>
+        <WebhookUrlGenerator />
         {/* Add more widgets/content here */}
       </main>
     </div>
