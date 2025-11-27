@@ -124,8 +124,10 @@ export const LeadMappingPage = () => {
 
   return (
     <div className="page-container">
-      <div className="card">
-        <h1 className="title">Lead Field Mapping</h1>
+      <div className="">
+        <center>
+          <h1 className="title">Lead Field Mapping</h1>
+        </center>
         <p className="subtitle">
           Map IndiaMART fields to Zoho CRM lead fields for proper data
           integration.
@@ -162,6 +164,7 @@ export const LeadMappingPage = () => {
           </div>
         ))}
 
+        {message && <div className="message">{message}</div>}
         <div className="button-container">
           <button
             onClick={handleSaveMapping}
@@ -170,15 +173,11 @@ export const LeadMappingPage = () => {
           >
             {saving ? "Saving..." : "Save Mapping"}
           </button>
-
-          {message && <div className="message">{message}</div>}
         </div>
       </div>
     </div>
   );
 };
-
-
 
 // import { useEffect, useState } from "react";
 // import { getLeadFields } from "../../api/crmApi.js";

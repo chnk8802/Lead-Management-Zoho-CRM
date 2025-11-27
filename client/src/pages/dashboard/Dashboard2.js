@@ -118,7 +118,43 @@ export const Dashboard2 = ({ userDetails }) => {
           <div className="card">
             <h2 className="card-title">Profile Overview</h2>
             <div className="card-content">
-              <p>
+              <div className="dropdown-row">
+                <User2 className="dropdown-icon" />
+                <span>
+                  <b>Name:</b> {userDetails.firstName} {userDetails.lastName}
+                </span>
+              </div>
+              <div className="dropdown-row">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/561/561127.png"
+                  alt="Email"
+                  className="dropdown-icon"
+                />
+                <span>
+                  <b>Email:</b> {userDetails.mailid}
+                </span>
+              </div>
+              <div className="dropdown-row">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/25/25694.png"
+                  alt="Time Zone"
+                  className="dropdown-icon"
+                />
+                <span>
+                  <b>Time Zone:</b> {userDetails.timeZone}
+                </span>
+              </div>
+              <div className="dropdown-row">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/1946/1946488.png"
+                  alt="Joined"
+                  className="dropdown-icon"
+                />
+                <span>
+                  <b>Joined:</b> {userDetails.createdTime}
+                </span>
+              </div>
+              {/* <p>
                 <b>User ID:</b> {userDetails.userId}
               </p>
               <p>
@@ -129,7 +165,7 @@ export const Dashboard2 = ({ userDetails }) => {
               </p>
               <p>
                 <b>Joined:</b> {userDetails.createdTime}
-              </p>
+              </p> */}
             </div>
           </div>
 
