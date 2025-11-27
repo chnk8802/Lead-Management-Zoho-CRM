@@ -1,4 +1,4 @@
-import { crmAxios } from "../utils/crmAxios.utils";
+import { crmAxios } from "../utils/crmAxios.utils.js";
 
 export const createLead = async (access_token, payload) => {
   try {

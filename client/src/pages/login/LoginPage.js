@@ -4,30 +4,35 @@ import "./LoginPage.css";
 
 export const LoginPage = () => {
   useEffect(() => {
-    //config is optional
+    // config is optional
     window.catalyst.auth.signIn("login");
   }, []);
+
   return (
-    <div className="container">
+    <div className="login-container">
+      {/* Left Section */}
+      <div className="login-left">
         <img
-          width="40px"
-          height="40px"
           src="https://cdn2.iconfinder.com/data/icons/user-management/512/profile_settings-512.png"
+          alt="Logo"
+          className="login-logo"
         />
-        <h1 className="title">User Profile Management</h1>
-        <div id="login"></div>
+        <h1 className="login-title">Indiamart2ZohoCRM</h1>
         <p className="signup-text">
           <b>
             Don't have an account?{" "}
-            <Link
-              to="/signup"
-              style={{ color: "blue", textDecorationLine: "underline" }}
-            >
+            <Link to="/signup" className="signup-link">
               Sign-up
             </Link>{" "}
             now!
           </b>
         </p>
+      </div>
+
+      {/* Right Section */}
+      <div className="login-right">
+        <div id="login"></div>
+      </div>
     </div>
   );
 };

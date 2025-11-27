@@ -6,7 +6,7 @@ export const LogoutButton = ({ btnvalue }) => {
         window.catalyst.auth.signOut('/');
     }, []);
     return (
-        <div id="logoutbtn">
+        <div id="logoutbtn" style={{padding: "5px", borderRadius: "50%"}}>
             <button onClick={logout} id="logout">
                 {btnvalue.title}
             </button>

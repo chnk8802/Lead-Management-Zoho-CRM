@@ -1,5 +1,6 @@
 import {LoginPage} from "../pages/login/LoginPage.js"
 import {Dashboard} from "../pages/dashboard/Dashboard.js";
+import {Dashboard2} from "../pages/dashboard/Dashboard2.js";
 import { useEffect, useState, useRef } from "react";
 
 export const Layout = () => {
@@ -37,7 +38,8 @@ export const Layout = () => {
       {isFetching ? (
         <p>Loading …</p>
       ) : isUserAuthenticated ? (
-        <Dashboard userDetails={userDetails} />
+        // <Dashboard userDetails={userDetails} />
+        <Dashboard2 userDetails={userDetails} />
       ) : (
         <LoginPage />
       )}

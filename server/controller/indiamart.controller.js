@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
 import { getRowsByQuery } from "../service/catalyst.service.js";
 import { accessToken } from "../service/zohoAuth.service.js";
-import { createLead } from "../service/crm.servce.js"
+// import { createLead } from "../service/crm.servce.js";
+import { crmAxios } from "../utils/crmAxios.utils.js";
 
 export const generateIndiaMartWebhookURL = async (req, res) => {
   try {
@@ -80,15 +81,29 @@ export const handleIndiaMartWebhook = async (req, res) => {
     // ------------ Mapping ends here ------------
     // and push the data to zoho crm using Zoho CRM APIs.
     const access_token = await accessToken(req, userId);
-    
-    const result = await createLead(access_token, mappedPayload);
-    if (!result) {
-      throw new Error("Failed to create lead in Zoho CRM");
+
+    try {
+      if (!access_token) {
+        throw new Error("Access token is required to create lead");
+      }
+      if (!mappedPayload || Object.keys(mappedPayload).length === 0) {
+        throw new Error("Payload is required to create lead");
+      }
+      const leadData = { data: [mappedPayload] };
+      const response = await crmAxios(access_token).post("/Leads", leadData);
+      return res.status(200).json(response.data);
+    } catch (error) {
+      console.error("Zoho CRM Error:", {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message,
+      });
+
+      throw new Error(JSON.stringify(error.response?.data || error.message));
     }
-    res.json({ result });
   } catch (err) {
     console.error("Error handling Indiamart webhook:", err);
-    res.status(500).json({
+    return res.status(500).json({
       error: "Internal Server Error",
       message: err.message,
       stack: err.stack,
