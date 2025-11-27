@@ -45,7 +45,9 @@ export const generateIndiaMartWebhookURL = async (req, res) => {
 
 export const handleIndiaMartWebhook = async (req, res) => {
   try {
-    const payload = req.body;
+    const payload = req.body.RESPONSE;
+    console.log("Received IndiaMART Webhook Payload:", payload.RESPONSE);
+
     const token = req.query.token;
     if (!token) {
       throw new Error("Token missing");
@@ -90,11 +92,10 @@ export const handleIndiaMartWebhook = async (req, res) => {
         throw new Error("Payload is required to create lead");
       }
       const leadData = { data: [mappedPayload] };
+      console.log("Creating lead in Zoho CRM with data:", leadData);
       const response = await crmAxios(access_token).post("/Leads", leadData);
-      return res.status(200).json({
-        success: true,
-        data: response.data,
-      });
+      console.log("Zoho CRM Response:", response.data);
+      return res.status(200).json(response.data);
     } catch (error) {
       console.error("Zoho CRM Error:", {
         status: error.response?.status,
@@ -109,7 +110,6 @@ export const handleIndiaMartWebhook = async (req, res) => {
     return res.status(500).json({
       error: "Internal Server Error",
       message: err.message,
-      stack: err.stack,
     });
   }
 };
