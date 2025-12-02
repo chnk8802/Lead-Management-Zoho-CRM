@@ -4,7 +4,7 @@ import { accessToken } from "../service/zohoAuth.service.js";
 export const getLeads = async (req, res) => {
   try {
     const access_token = await accessToken(req);
-    
+
     const api = crmAxios(access_token);
 
     const response = await api.get("/Leads?fields=Last_Name");
@@ -31,7 +31,7 @@ export const getLeadFields = async (req, res) => {
     return res.json(response.data);
   } catch (error) {
     console.error(
-      "Error fetching lead fields:",
+      "Error fetching lead fields: ",
       error?.response?.data || error.message
     );
     return res.status(500).json({
@@ -40,5 +40,3 @@ export const getLeadFields = async (req, res) => {
     });
   }
 };
-
-

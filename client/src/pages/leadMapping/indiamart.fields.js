@@ -1,4 +1,4 @@
-export const instamartFields = [
+export const indiamartFields = [
     { api_name: "SUBJECT", display_label: "Subject" },
     { api_name: "SENDER_NAME", display_label: "Sender Name" },
     { api_name: "SENDER_EMAIL", display_label: "Sender Email" },

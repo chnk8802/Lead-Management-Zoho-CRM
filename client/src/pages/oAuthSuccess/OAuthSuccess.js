@@ -15,7 +15,7 @@ export const OAuthSuccess = () => {
 
   useEffect(() => {
     if (countdown <= 0) {
-      navigate("/dashboard");
+      navigate("/");
     }
   }, [countdown, navigate]);
 
@@ -30,7 +30,7 @@ export const OAuthSuccess = () => {
         <p className="success-countdown">
           Redirecting in <strong>{countdown}</strong> seconds...
         </p>
-        <button className="success-button" onClick={() => navigate("/dashboard")}>
+        <button className="success-button" onClick={() => navigate("/")}>
           Go Now
         </button>
       </div>
