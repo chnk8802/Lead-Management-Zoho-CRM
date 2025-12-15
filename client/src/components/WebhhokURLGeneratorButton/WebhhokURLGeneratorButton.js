@@ -2,7 +2,7 @@ import { useState } from "react";
 import { fetchWebhookUrl } from "../../api/indiamartWebhookApi.js";
 import "./WebhhokURLGeneratorButton.css";
 
-const WebhookUrlGenerator = () => {
+export const WebhookUrlGenerator = () => {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -13,10 +13,9 @@ const WebhookUrlGenerator = () => {
       setLoading(true);
       setCopied(false);
 
-      const webhookUrl = await fetchWebhookUrl(); // using separate function
+      const webhookUrl = await fetchWebhookUrl();
       setUrl(webhookUrl);
       setShowModal(true);
-
     } catch (err) {
       alert("Failed to generate URL");
     } finally {
@@ -31,32 +30,32 @@ const WebhookUrlGenerator = () => {
   };
 
   return (
-    <div>
-      <button className="generate-btn" onClick={generateUrl} disabled={loading}>
-        {loading ? "Generating IndiaMART Webhook URL..." : "Generate IndiaMART Webhook URL"}
+    <div className="webhook-wrapper">
+      <button className="primary-btn" onClick={generateUrl} disabled={loading}>
+        {loading ? "Generating..." : "Generate IndiaMART Webhook URL"}
       </button>
 
       {showModal && (
-        <div className="modal-overlay">
-          <div className="modal-card">
-            <h2>Webhook URL Generated</h2>
+        <div className="simple-modal">
+          <h2>Webhook URL Generated 🎉</h2>
 
-            <input className="url-box" value={url} readOnly />
+          <div className="url-container">
+            <input type="text" value={url} readOnly />
+            <button className="copy-btn" onClick={copyToClipboard}>
+              {copied ? "Copied ✔" : "Copy"}
+            </button>
+          </div>
 
-            <div className="modal-actions">
-              <button className="copy-btn" onClick={copyToClipboard}>
-                {copied ? "Copied!" : "Copy URL"}
-              </button>
-
-              <button className="close-btn" onClick={() => setShowModal(false)}>
-                Close
-              </button>
-            </div>
+          <div className="modal-footer">
+            <button
+              className="secondary-btn"
+              onClick={() => setShowModal(false)}
+            >
+              Close
+            </button>
           </div>
         </div>
       )}
     </div>
   );
 };
-
-export default WebhookUrlGenerator;

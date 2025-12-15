@@ -35,5 +35,5 @@ app.get(/^\/.*$/, (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server running at ${process.env.REDIRECT_URI}:${port}/`);
+  console.log(`Server started successfully on port ${port}`);
 });

@@ -1,5 +1,6 @@
 import "./Signup.css";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export const Signup = () => {
   const [feedbackMessage, setFeedbackMessage] = useState("");
@@ -54,8 +55,8 @@ export const Signup = () => {
       {showForm ? (
         <div className="signup-card">
           <img
-            src="https://img1.wsimg.com/isteam/ip/fa32fa94-50a8-4a5c-9525-4781001c7a28/blob-4bf291d.png/:/rs=w:90,h:81,cg:true,m/cr=w:90,h:81/qt=q:100/ll"
-            alt="User Profile Management"
+            src="/logo512.png"
+            alt="logo"
           />
           <h1>Indiamart2ZohoCRM</h1>
           <p>Please fill this form to create a new account.</p>
@@ -96,6 +97,14 @@ export const Signup = () => {
                 required
               />
             </label>
+
+            <p>
+              Already have an account?{" "}
+              <Link className="link" to="/login">
+                Log In
+              </Link>
+              .
+            </p>
 
             <p>
               By creating an account, you agree to our{" "}

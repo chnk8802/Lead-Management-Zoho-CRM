@@ -15,6 +15,7 @@ export const getLeads = async () => {
 export const getLeadFields = async () => {
     try {
         const response = await fetch('/api/crm/lead-fields');
+        console.log("Response:", response.data);
         if (!response.ok) {
             throw new Error('Failed to fetch lead fields');
         }

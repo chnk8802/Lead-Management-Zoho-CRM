@@ -1,6 +1,6 @@
 import {LoginPage} from "../pages/login/LoginPage.js"
 import {Dashboard} from "../pages/dashboard/Dashboard.js";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 
 export const Layout = () => {
   const [isFetching, setIsFetching] = useState(true);

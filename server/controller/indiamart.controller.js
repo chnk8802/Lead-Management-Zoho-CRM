@@ -23,9 +23,9 @@ export const generateIndiaMartWebhookURL = async (req, res) => {
     const token = jwt.sign({ userId }, secret, { expiresIn: tenYears });
 
     // Redirect URI from env file
-    const baseUrl = process.env.REDIRECT_URI;
+    const baseUrl = process.env.BASE_URL;
     if (!baseUrl) {
-      return res.status(500).json({ error: "REDIRECT_URI not configured" });
+      return res.status(500).json({ error: "BASE_URL not configured" });
     }
 
     // Final IndiaMART Webhook URL
@@ -46,40 +46,24 @@ export const generateIndiaMartWebhookURL = async (req, res) => {
 export const handleIndiaMartWebhook = async (req, res) => {
   try {
     const payload = req.body.RESPONSE;
-    if (!payload) {
-      throw new Error("Invalid payload");
-    }
+    if (!payload) throw new Error("Invalid payload");
 
     const instamartProduct = payload["QUERY_PRODUCT_NAME"];
 
-    if (!instamartProduct) {
-      throw new Error("Indiamart product name is missing in payload");
-    }
+    if (!instamartProduct) throw new Error("Product name missing");
 
     const token = req.query.token;
-    if (!token) {
-      throw new Error("Token missing");
-    }
+    if (!token) throw new Error("Token missing");
 
     const secret = process.env.JWT_SECRET;
-    let decoded;
-    try {
-      decoded = jwt.verify(token, secret);
-    } catch (err) {
-      throw new Error("Invalid token");
-    }
-
+    const decoded = jwt.verify(token, secret);
     const userId = decoded.userId;
+
     const query = `SELECT * FROM tokens WHERE auth_user_id = '${userId}'`;
     const rows = await getRowsByQuery(req, query);
+    if (!rows?.length) throw new Error("No tokens found");
 
-    if (!rows || rows.length === 0) {
-      throw new Error("No tokens found for user");
-    }
-
-    const tokenRows = rows[0].tokens;
-    const lead_mapping = JSON.parse(tokenRows.lead_mapping);
-
+    const lead_mapping = JSON.parse(rows[0].tokens.lead_mapping);
     const mappedPayload = {};
 
     for (const key in payload) {
@@ -88,11 +72,14 @@ export const handleIndiaMartWebhook = async (req, res) => {
       }
     }
 
-    const access_token = await accessToken(req, userId);
-
-    if (!access_token) {
-      throw new Error("Access token is required to create lead");
+    if (!Object.keys(mappedPayload).length) {
+      throw new Error("Mapped payload empty");
     }
+
+    mappedPayload.Lead_Source = "IndiaMart";
+
+    const access_token = await accessToken(req, userId);
+    if (!access_token) throw new Error("Access token missing");
 
     const api = crmAxios(access_token);
 
@@ -100,70 +87,24 @@ export const handleIndiaMartWebhook = async (req, res) => {
       throw new Error("Payload is required to create lead");
     }
 
-    let response;
-    const leadData = { data: [mappedPayload] };
-    try {
-      response = await api.post("/Leads", leadData);
-    } catch (error) {
-      return res.status(500).json({
-        error: "Error creating lead in Zoho CRM",
-        message: error.message,
-        stack: error.stack,
-      });
-    }
+    const leadResponse = await api.post("/Leads", {
+      data: [mappedPayload],
+    });
 
-    const createdLeadId = response.data.data[0].details.id;
-
-    if (!response || !response.data) {
-      throw new Error("Invalid response from Zoho CRM while creating lead");
-    }
+    const createdLeadId = leadResponse?.data?.data?.[0]?.details?.id;
+    if (!createdLeadId) throw new Error("Lead ID missing");
 
     const product = await getProduct(access_token, instamartProduct);
     const productRelatedList = await getLeadsRelatedList(access_token);
-    const productId = product.id;
-    // const relatedListId = productRelatedList.id;
-    const relatedListApiName = productRelatedList.api_name;
 
-    const payloadData = {
-      data: [{ id: productId }],
-    };
-
-    let relatedListResponse;
-    try {
-      relatedListResponse = await api.put(
-        `/Leads/${createdLeadId}/${relatedListApiName}`,
-        payloadData
-      );
-    } catch (error) {
-      return res.status(500).json({
-        error: "Error updating related list in Zoho CRM",
-        message: error.message,
-        stack: error.stack,
-      });
-    }
-    if (
-      !relatedListResponse ||
-      !relatedListResponse.data ||
-      !relatedListResponse.data.data
-    ) {
-      throw new Error(
-        "Invalid response from Zoho CRM while updating related list"
-      );
-    }
-
-    return res.status(200).json({
-      data: [
-        {
-          code: "SUCCESS",
-          message: "Lead created successfully with related product",
-          status: "success",
-        },
-      ],
+    await api.put(`/Leads/${createdLeadId}/${productRelatedList.api_name}`, {
+      data: [{ id: product.id }],
     });
-  } catch (err) {
-    return res.status(500).json({
-      error: "Internal Server Error",
-      message: err.message,
-    });
+
+  } catch (error) {
+    console.error("IndiaMart Webhook Error:", error.message);
   }
+  return res.status(200).json({
+    success: true,
+  });
 };

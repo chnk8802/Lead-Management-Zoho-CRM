@@ -95,6 +95,15 @@ input[type="submit"]:hover {
 }
 
 /* ===================== Links ========================== */
+.link {
+  color: #007aff;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
 #link {
   color: #007aff;
   text-decoration: none;

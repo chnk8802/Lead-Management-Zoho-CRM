@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Layout } from "./layout/Layout.js";
 import { Signup } from "./pages/signup/Signup.js";
 import { OAuthSuccess } from "./pages/oAuthSuccess/OAuthSuccess.js";
-import { NotFound } from "./pages/notfound/NotFound.js";
 import { ProtectedRoutes } from "./routes/ProtectedRoutes.js";
 import { PublicRoutes } from "./routes/PublicRoutes.js";
 

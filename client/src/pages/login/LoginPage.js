@@ -13,7 +13,7 @@ export const LoginPage = () => {
       {/* Left Section */}
       <div className="login-left">
         <img
-          src="https://img1.wsimg.com/isteam/ip/fa32fa94-50a8-4a5c-9525-4781001c7a28/blob-4bf291d.png/:/rs=w:90,h:81,cg:true,m/cr=w:90,h:81/qt=q:100/ll"
+          src="/logo512.png"
           alt="Logo"
           className="login-logo"
         />
